@@ -127,7 +127,7 @@ function App() {
     setFormData((current) => ({ ...current, [name]: value }));
   };
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
 
     if (!formData.fullName || !formData.email || !formData.phone || !formData.service || !formData.date || !formData.time) {
@@ -143,12 +143,44 @@ function App() {
       status: 'Pending',
     };
 
+    // Optimistically update local state
     const updatedBookings = [newBooking, ...bookings];
     setBookings(updatedBookings);
-    setFormMessage(
-      `Thank you, ${formData.fullName}! Your booking request for ${formData.service} on ${formData.date} at ${formData.time} has been saved. An owner can review it from the secure admin page.`
-    );
-    setFormStatus('success');
+
+    const API_BASE = import.meta.env.VITE_API_BASE || '';
+    if (API_BASE) {
+      try {
+        const res = await fetch(`${API_BASE.replace(/\/$/, '')}/api/bookings`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(formData),
+        });
+
+        if (res.ok) {
+          const saved = await res.json();
+          // replace optimistic item with saved item from server
+          const replaced = [saved, ...bookings];
+          setBookings(replaced);
+          setFormMessage(
+            `Thank you, ${saved.fullName}! Your booking request for ${saved.service} on ${saved.date} at ${saved.time} has been received.`
+          );
+          setFormStatus('success');
+        } else {
+          const err = await res.json().catch(() => ({}));
+          setFormMessage(err.error || 'Failed to submit booking to server. Saved locally.');
+          setFormStatus('warning');
+        }
+      } catch (e) {
+        setFormMessage('Could not reach booking server. Saved locally.');
+        setFormStatus('warning');
+      }
+    } else {
+      setFormMessage(
+        `Thank you, ${formData.fullName}! Your booking request for ${formData.service} on ${formData.date} at ${formData.time} has been saved. An owner can review it from the secure admin page.`
+      );
+      setFormStatus('success');
+    }
+
     setFormData(initialFormState);
     setMenuOpen(false);
   };

@@ -1,0 +1,44 @@
+-- Database and tables for Glam Nail Bar
+CREATE DATABASE IF NOT EXISTS `glam_nail_bar` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+USE `glam_nail_bar`;
+
+-- Bookings table
+CREATE TABLE IF NOT EXISTS `bookings` (
+  `id` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+  `fullName` VARCHAR(200) NOT NULL,
+  `email` VARCHAR(200) NOT NULL,
+  `phone` VARCHAR(60) NOT NULL,
+  `service` VARCHAR(120) NOT NULL,
+  `date` DATE NOT NULL,
+  `time` VARCHAR(20) NOT NULL,
+  `notes` TEXT,
+  `designLink` VARCHAR(512),
+  `moodboardImageName` VARCHAR(255),
+  `status` VARCHAR(40) NOT NULL DEFAULT 'Pending',
+  `createdAt` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  INDEX (`email`),
+  INDEX (`date`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- Income items
+CREATE TABLE IF NOT EXISTS `incomes` (
+  `id` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+  `source` VARCHAR(255) NOT NULL,
+  `amount` DECIMAL(10,2) NOT NULL DEFAULT 0,
+  `date` DATE NOT NULL,
+  `createdAt` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  INDEX (`date`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- Expense items
+CREATE TABLE IF NOT EXISTS `expenses` (
+  `id` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+  `category` VARCHAR(255) NOT NULL,
+  `amount` DECIMAL(10,2) NOT NULL DEFAULT 0,
+  `date` DATE NOT NULL,
+  `createdAt` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  INDEX (`date`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;

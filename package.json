@@ -6,7 +6,15 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "start:all": "concurrently \"npm --prefix server run dev\" \"npm run dev\"",
+    "deploy:pages": "gh-pages -d dist",
+    "deploy": "npm run build && npm run deploy:pages",
+    "ci:build": "node scripts/manager.js build",
+    "ci:deploy-frontend": "node scripts/manager.js deploy-frontend",
+    "ci:deploy-backend": "node scripts/manager.js deploy-backend",
+    "ci:deploy-all": "node scripts/manager.js deploy-all",
+    "ci:help": "node scripts/manager.js help"
   },
   "dependencies": {
     "react": "^18.3.1",
@@ -14,6 +22,8 @@
   },
   "devDependencies": {
     "@vitejs/plugin-react": "^4.3.1",
-    "vite": "^5.4.1"
+    "vite": "^5.4.1",
+    "concurrently": "^8.2.0",
+    "gh-pages": "^5.0.0"
   }
 }

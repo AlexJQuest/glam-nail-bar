@@ -1,0 +1,16 @@
+services:
+  - type: web_service
+    name: glam-nail-bar-api
+    env: node
+    branch: main
+    plan: free
+    buildCommand: cd server && npm install
+    startCommand: cd server && npm start
+    envVars:
+      - key: PORT
+        value: "4000"
+      - key: DB_NAME
+        value: glam_nail_bar
+      - key: NODE_ENV
+        value: production
+    autoDeploy: true

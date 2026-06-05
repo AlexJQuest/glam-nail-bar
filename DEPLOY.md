@@ -35,6 +35,10 @@ Notes for backend hosting (Render recommended):
    - `DB_NAME` (e.g. `glam_nail_bar`)
    - `ADMIN_PASSWORD`
    - `ALLOWED_ORIGINS` (e.g. `https://AlexJQuest.github.io`)
+
+   If your database provider blocks IP ranges, also allow Render outbound IPs:
+   - `74.220.49.0/24`
+   - `74.220.57.0/24`
 5. Push to `main` to trigger the frontend GitHub Pages workflow, or manually run the `Deploy Backend to Render` workflow in GitHub Actions.
 
 After backend is live, your frontend will use `VITE_API_BASE` during the build to call the hosted API.
